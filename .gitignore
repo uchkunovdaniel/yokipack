@@ -1,0 +1,8 @@
+.idea/
+.vscode/
+*.iml
+/bin/
+/dist/
+*.test
+*.out
+.env
