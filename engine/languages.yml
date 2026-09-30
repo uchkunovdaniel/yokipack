@@ -1,0 +1,9 @@
+Python:
+  extensions:
+    - ".py"
+TypeScript:
+  extensions:
+    - ".ts"
+JavaScript:
+  extensions:
+    - ".js"
