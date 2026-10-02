@@ -76,3 +76,7 @@ func (fs *OSFileSystem) WalkDir(path string, options *WalkDirOptions) []string {
 	}
 	return dirs
 }
+
+func (fs *OSFileSystem) ReadIgnoreFile() []string {
+	return strings.Split(string(fs.ReadFile(".yokipackignore")), "\n")
+}
