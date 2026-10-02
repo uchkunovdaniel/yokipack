@@ -5,14 +5,34 @@ import (
 	"log"
 	"strings"
 
+	"github.com/bits-and-blooms/bloom/v3"
 	"go.yaml.in/yaml/v4"
 )
-
-var fs = NewOSFileSystem(".")
 
 type Languages struct {
 	Name       string   `yaml:"-"`
 	Extensions []string `yaml:"extensions"`
+}
+
+var fs = NewOSFileSystem(".")
+
+var files = fs.WalkDir(".", &WalkDirOptions{
+	SkipDirs:  []string{},
+	FilesOnly: true,
+})
+
+var bloomFilter = bloom.New(1000000, 1)
+
+var langs []Languages = parseLanguages()
+
+func initBloomFilter() {
+	for _, l := range langs {
+		bloomFilter.Add([]byte(l.Extensions[0]))
+	}
+}
+func isExtensionInBloomFilter(file string) bool {
+	extension := strings.Split(file, ".")[len(strings.Split(file, "."))-1]
+	return bloomFilter.Test([]byte(extension))
 }
 
 func parseLanguages() []Languages {
@@ -27,29 +47,20 @@ func parseLanguages() []Languages {
 		langs = append(langs, lang)
 	}
 	return langs
-
 }
 
 func DetectLookupTable() {
-	//files := fs.WalkDir(".", &WalkDirOptions{
-	//	SkipDirs:  []string{".git", ".idea", ".vscode", ".md", "LICENSE"},
-	//	FilesOnly: true,
-	//})
-	for _, lang := range parseLanguages() {
-		fmt.Println(lang.Name, lang.Extensions)
-	}
+	initBloomFilter()
 
+	for _, f := range files {
+		fmt.Println(isExtensionInBloomFilter(f), f)
+	}
 }
 
 func detectContainer() string {
-	dir := fs.WalkDir(".", &WalkDirOptions{
-		SkipDirs:  []string{".git", ".idea", ".vscode", ".md", "LICENSE"},
-		FilesOnly: true,
-	})
-
-	for idx, d := range dir {
+	for idx, d := range files {
 		if strings.Contains(d, "Dockerfile") || strings.Contains(d, "Containerfile") {
-			return dir[idx]
+			return files[idx]
 		}
 	}
 	return ""
