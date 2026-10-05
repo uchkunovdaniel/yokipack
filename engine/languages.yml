@@ -7,3 +7,9 @@ TypeScript:
 JavaScript:
   extensions:
     - ".js"
+Go:
+  extensions:
+    - ".go"
+Java:
+  extensions:
+    - ".java"
