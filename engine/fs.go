@@ -10,7 +10,7 @@ import (
 )
 
 type OSFileSystem struct {
-	root string
+	Root string
 }
 
 type WalkDirOptions struct {
@@ -19,23 +19,23 @@ type WalkDirOptions struct {
 }
 
 func NewOSFileSystem(root string) *OSFileSystem {
-	return &OSFileSystem{root: root}
+	return &OSFileSystem{Root: root}
 }
 
-func (fs *OSFileSystem) Root() string {
-	return fs.root
+func (fs *OSFileSystem) root() string {
+	return fs.Root
 }
 
 func (fs *OSFileSystem) resolve(path string) string {
-	return filepath.Join(fs.root, path)
+	return filepath.Join(fs.Root, path)
 }
 
-func (fs *OSFileSystem) Exists(path string) bool {
+func (fs *OSFileSystem) exists(path string) bool {
 	_, err := os.Stat(fs.resolve(path))
 	return err == nil
 }
 
-func (fs *OSFileSystem) ReadFile(path string) []byte {
+func (fs *OSFileSystem) readFile(path string) []byte {
 	file, err := os.ReadFile(fs.resolve(path))
 	if err != nil {
 		fmt.Println(err)
@@ -43,7 +43,7 @@ func (fs *OSFileSystem) ReadFile(path string) []byte {
 	return file
 }
 
-func (fs *OSFileSystem) Glob(pattern string) []string {
+func (fs *OSFileSystem) glob(pattern string) []string {
 	matches, err := filepath.Glob(fs.resolve(pattern))
 	if err != nil {
 		fmt.Println(err)
@@ -51,7 +51,7 @@ func (fs *OSFileSystem) Glob(pattern string) []string {
 	return matches
 }
 
-func (fs *OSFileSystem) WalkDir(path string, options *WalkDirOptions) []string {
+func (fs *OSFileSystem) walkDir(path string, options *WalkDirOptions) []string {
 	var dirs []string
 	err := godirwalk.Walk(fs.resolve(path), &godirwalk.Options{
 		Callback: func(osPathname string, de *godirwalk.Dirent) error {
@@ -77,6 +77,6 @@ func (fs *OSFileSystem) WalkDir(path string, options *WalkDirOptions) []string {
 	return dirs
 }
 
-func (fs *OSFileSystem) ReadIgnoreFile() []string {
-	return strings.Split(string(fs.ReadFile(".yokipackignore")), "\n")
+func (fs *OSFileSystem) readIgnoreFile() []string {
+	return strings.Split(string(fs.readFile(".yokipackignore")), "\n")
 }
