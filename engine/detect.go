@@ -5,14 +5,8 @@ import (
 	"strings"
 )
 
-var fs = NewOSFileSystem(".")
-var files = fs.walkDir(".", &WalkDirOptions{
-	SkipDirs:  fs.readIgnoreFile(),
-	FilesOnly: true,
-})
-var languages = parseLanguages("engine/languages.yml")
-
 func DetectLookupTable() {
+	initBloomFilter()
 	for _, f := range files {
 		fmt.Println(isExtensionInBloomFilter(f), f)
 	}

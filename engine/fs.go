@@ -9,6 +9,12 @@ import (
 	"github.com/karrick/godirwalk"
 )
 
+var fs = NewOSFileSystem(".")
+var files = fs.walkDir(".", &WalkDirOptions{
+	SkipDirs:  fs.readIgnoreFile(),
+	FilesOnly: true,
+})
+
 type OSFileSystem struct {
 	Root string
 }

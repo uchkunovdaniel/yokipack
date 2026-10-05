@@ -6,6 +6,8 @@ import (
 	"go.yaml.in/yaml/v4"
 )
 
+var languages = parseLanguages("engine/languages.yml")
+
 type Languages struct {
 	Name       string   `yaml:"-"`
 	Extensions []string `yaml:"extensions"`
