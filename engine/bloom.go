@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"slices"
 	"strings"
 
 	"github.com/bits-and-blooms/bloom/v3"
@@ -14,9 +15,16 @@ func initBloomFilter() {
 	}
 }
 
-func isExtensionInBloomFilter(file string) bool {
+func isLanguageInProject(file string) bool {
 	fileArray := strings.Split(file, ".")
 	last := len(fileArray) - 1
 	extension := "." + fileArray[last]
+
 	return bloomFilter.Test([]byte(extension))
+}
+
+func isLanguageKnown() bool {
+	initBloomFilter()
+
+	return slices.ContainsFunc(files, isLanguageInProject)
 }
