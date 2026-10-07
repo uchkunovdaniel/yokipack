@@ -10,7 +10,7 @@ import (
 )
 
 var fs = NewOSFileSystem(".")
-var files = fs.walkDir(".", &WalkDirOptions{
+var files = fs.walkDir("test", &WalkDirOptions{
 	SkipDirs:  fs.readIgnoreFile(),
 	FilesOnly: true,
 })

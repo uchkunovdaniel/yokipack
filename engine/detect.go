@@ -6,10 +6,7 @@ import (
 )
 
 func DetectLookupTable() {
-	initBloomFilter()
-	for _, f := range files {
-		fmt.Println(isExtensionInBloomFilter(f), f)
-	}
+	fmt.Println(isLanguageKnown())
 }
 
 func DetectContainer() string {
